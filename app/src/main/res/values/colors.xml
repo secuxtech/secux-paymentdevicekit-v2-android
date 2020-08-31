@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="colorTitle">#9C27B0</color>
+    <color name="colorPageBkg">#F8F8F8</color>
+    <color name="colorAccountInfo">#707070</color>
+    <color name="colorDevSelected">#E4B4EE</color>
+    <color name="colorDevUnselected">#FFFFFF</color>
+    <color name="colorProgressRing">#9C27B0</color>
+    <color name="colorTestButton">#9730A8</color>
+    <color name="colorRescanButton">#E178F5</color>
+
+
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorGray">#F0F0F0</color>
+    <color name="colorYellow">#DFB445</color>
+    <color name="colorYellowLight">#FFF9E9</color>
+    <color name="colorPurple">#4F2359</color>
+    <color name="colorBlack">#01111C</color>
+</resources>
