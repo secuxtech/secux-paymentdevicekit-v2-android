@@ -272,7 +272,7 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
 
         Pair<Integer, String> ret = new Pair<>(SecuX_Peripheral_Operation_fail, "Unknown reason");
 
-        boolean bRet = mCmdHdr.sendLocalTimeCmd();
+        //boolean bRet = mCmdHdr.sendLocalTimeCmd();
 
         int nRet = mCmdHdr.sendConfirmTransactionCmd(encryptedTransactionData);
         Log.i(ContentValues.TAG, "doPaymentVerification ret= " + nRet);
