@@ -75,7 +75,6 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
 
     private PaymentNonceInputDialog mNonceInputDlg = new PaymentNonceInputDialog();
 
-
     private BLEDevice       mCurrentSelectDevice = null;
     private NfcAdapter      mNfcAdapter;
     private PendingIntent   mPendingIntent = null;
@@ -403,7 +402,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
 
                 //String encryptedStr = "91sGnngVALh6Ep3RsEJKhGQEQM2ntJiZxR0cwiQNLT\\/SbZcCVux1WHabIrzqkICsPz3PudpRHnEFwcbiMO7qhA==";
                 //final byte[] encryptedData = Base64.decode(encryptedStr, Base64.DEFAULT);
-                final byte[] encryptedData = getEncryptMobilePaymentCommand(devID.substring(devID.length() - 8, devID.length()), amount, currency,ivKey, "PA123456789012345678901234567890");
+                final byte[] encryptedData = getEncryptMobilePaymentCommand(devID.substring(devID.length() - 8, devID.length()), amount, currency,ivKey, "PA123456789012345678901234567891");
 
 
                 Pair<Integer, String> ret = peripheralManager.doPaymentVerification(encryptedData, machineIoControlParam);
