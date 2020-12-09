@@ -1,6 +1,7 @@
 package com.secuxtech.paymentdevicekit;
 
-import androidx.annotation.IntDef;
+
+//import androidx.annotation.IntDef;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -31,12 +32,12 @@ public abstract class BLEManagerCallback {
     public static final int BlEDEV_WriteFailed = 6;
     public static final int BlEDEV_ReadFailed = 7;
     public static final int BlEDEV_Disconnected = 8;
-
+/*
     @IntDef({BlEDEV_Off, BlEDEV_ConnFailed,BlEDEV_FindServiceFailed,BlEDEV_FindCharacteristicsFailed,
             BlEDEV_ConnDone,BlEDEV_UnsupportedDev,BlEDEV_WriteFailed,BlEDEV_ReadFailed,BlEDEV_Disconnected})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ConnDevStatus {}
-
+*/
     public void newBLEDevice(BLEDevice device){
 
     }
@@ -45,7 +46,7 @@ public abstract class BLEManagerCallback {
 
     }
 
-    public void updateConnDevStatus(@ConnDevStatus int status){
+    public void updateConnDevStatus( int status){
 
     }
 }

@@ -2,10 +2,10 @@ package com.secuxtech.paymentdevicekit;
 
 import android.util.Log;
 
-import androidx.annotation.StringDef;
+//import androidx.annotation.StringDef;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+//import java.lang.annotation.Retention;
+//import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -32,10 +32,13 @@ public class PaymentPacketHandler {
     public static final String Command_Append_Type_D = "D";
     public static final String Command_Append_Type_T = "T";
 
+    /*
     @StringDef({Command_Append_Type_Invalid, Command_Append_Type_0, Command_Append_Type_1, Command_Append_Type_2,
             Command_Append_Type_4, Command_Append_Type_D, Command_Append_Type_T})
     @Retention(RetentionPolicy.SOURCE)
     public @interface CommandAppendType {}
+
+     */
 
     public static byte[] generateCommandPacket(byte[] cmdData){
         int numOfPacket = cmdData.length / PACKET_PAYLOAD_SIZE;
@@ -158,7 +161,7 @@ public class PaymentPacketHandler {
         return (packet[0] & 0x80) == 0x80;
     }
 
-    public static @CommandAppendType String getCommandType(int cmdID){
+    public static  String getCommandType(int cmdID){
         if (cmdID < 0xE0){
             int bitFlag = (cmdID & 0x03);
             if (bitFlag == 0x00){

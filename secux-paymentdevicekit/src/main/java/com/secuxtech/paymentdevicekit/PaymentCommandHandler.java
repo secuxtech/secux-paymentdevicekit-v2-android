@@ -3,11 +3,11 @@ package com.secuxtech.paymentdevicekit;
 import android.util.Log;
 import android.util.Pair;
 
-import androidx.annotation.IntDef;
-import androidx.annotation.StringDef;
+//import androidx.annotation.IntDef;
+//import androidx.annotation.StringDef;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+//import java.lang.annotation.Retention;
+//import java.lang.annotation.RetentionPolicy;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,9 +30,12 @@ public class PaymentCommandHandler {
     public static final int REPLY_RET_BLOCK = 0xE1;
     public static final int REPLY_RET_TEXT = 0xF1;
 
+    /*
     @IntDef({REPLY_RET_RESULT, REPLY_RET_BLOCK, REPLY_RET_TEXT})
     @Retention(RetentionPolicy.SOURCE)
     public @interface DeviceReplyRet {}
+
+     */
 
     public Pair<Integer, String> poll(){
         int cmdID = 0x14;
