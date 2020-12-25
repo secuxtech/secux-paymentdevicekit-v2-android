@@ -446,13 +446,17 @@ public class BLEManager {
     public boolean sendData(byte[] data){
 
         mSendRet = false;
-        if (this.mBluetoothGatt != null){ // && this.mBluetoothTxCharacter!=null){
-            this.mRecvData = null;
-            this.mLastSendData = data;
+        this.mRecvData = null;
+        this.mLastSendData = data;
 
-            mBluetoothTxCharacter = mBluetoothGatt
-                    .getService(UUID.fromString(ServiceUUID))
-                    .getCharacteristic(UUID.fromString(TXCharacteristicUUID));
+        if (this.mBluetoothGatt != null){ // && this.mBluetoothTxCharacter!=null){
+
+            BluetoothGattService service = mBluetoothGatt.getService(UUID.fromString(ServiceUUID));
+            if (service == null){
+                return mSendRet;
+            }
+
+            mBluetoothTxCharacter = service.getCharacteristic(UUID.fromString(TXCharacteristicUUID));
 
             Log.i(TAG, "send data ");
             SecuXPaymentUtility.logByteArrayHexValue(data);
@@ -515,9 +519,12 @@ public class BLEManager {
 
         if (this.mBluetoothGatt != null){ // && this.mBluetoothTxCharacter!=null){
 
-            mBluetoothTxCharacter = mBluetoothGatt
-                    .getService(UUID.fromString(ServiceUUID))
-                    .getCharacteristic(UUID.fromString(TXCharacteristicUUID));
+            BluetoothGattService service = mBluetoothGatt.getService(UUID.fromString(ServiceUUID));
+            if (service == null){
+                return mRecvData;
+            }
+
+            mBluetoothTxCharacter = service.getCharacteristic(UUID.fromString(TXCharacteristicUUID));
 
             synchronized (mWriteDoneLockObject){
                 //this.mBluetoothTxCharacter.setValue(cmd);
