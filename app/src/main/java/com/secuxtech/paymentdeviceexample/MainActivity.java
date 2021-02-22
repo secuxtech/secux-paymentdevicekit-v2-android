@@ -418,10 +418,10 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
             }
         }else {
             try {
-                //mTerminalID = "77a08afa";
-                //mPaymentKey = "iuw0immkb5oy2v2krnohstnkx5krb5re";
-                //amount = "2";
-                //currency = "DCT:IFC";
+                mTerminalID = "3zhkyue5";
+                mPaymentKey = "2l03aa4vrguhzt41uxmcy4yl14qqyey0";
+                amount = "1";
+                currency = "DCT:SPC";
                 final byte[] encryptedData = getEncryptMobilePaymentCommand(mTerminalID, amount, currency, ivKey, mPaymentKey);
 
                 Pair<Integer, String> ret = peripheralManager.doPaymentVerification(encryptedData);
@@ -568,7 +568,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
         }
 
         @Override
-        public void updateConnDevStatus(@ConnDevStatus int status){
+        public void updateConnDevStatus(int status){
 
         }
     };
