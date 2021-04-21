@@ -22,6 +22,8 @@ public class PaymentPeripheralManagerV1 {
 
     public static final Integer SecuX_Peripheral_Operation_OK = 0;
     public static final Integer SecuX_Peripheral_Operation_fail = 1;
+    public static final Integer SecuX_Peripheral_Operation_BLE_Off = 2;
+//    public static final Integer SecuX_Peripheral_Operation_BLE_Permission_Denied = 3;
 
     protected byte[] ivKeyData;
 

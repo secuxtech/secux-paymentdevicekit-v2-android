@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="paymentdeviceexample/app" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/paymentdeviceexample.iml" filepath="$PROJECT_DIR$/.idea/modules/paymentdeviceexample.iml" group="paymentdeviceexample" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/secux-paymentdevicekit/secux-paymentdevicekit.iml" filepath="$PROJECT_DIR$/.idea/modules/secux-paymentdevicekit/secux-paymentdevicekit.iml" group="paymentdeviceexample/secux-paymentdevicekit" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/paymentdeviceexample.iml" filepath="$PROJECT_DIR$/.idea/modules/paymentdeviceexample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/paymentdeviceexample.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/paymentdeviceexample.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/secux-paymentdevicekit/paymentdeviceexample.secux-paymentdevicekit.iml" filepath="$PROJECT_DIR$/.idea/modules/secux-paymentdevicekit/paymentdeviceexample.secux-paymentdevicekit.iml" />
     </modules>
   </component>
 </project>

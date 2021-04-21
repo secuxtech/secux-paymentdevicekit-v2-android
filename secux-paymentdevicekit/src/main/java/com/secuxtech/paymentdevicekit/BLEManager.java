@@ -128,7 +128,7 @@ public class BLEManager {
         filters.add(scanFilter);
         android.bluetooth.le.ScanSettings.Builder scanSettingsBuilder = new android.bluetooth.le.ScanSettings.Builder();
         scanSettingsBuilder.setScanMode(1);
-        scanSettingsBuilder.setCallbackType(1);
+//        scanSettingsBuilder.setCallbackType(1);
 
         ScanSettings scanSettings = scanSettingsBuilder.build();
         //mBluetoothAdapter.getBluetoothLeScanner().startScan(mScanCallback);

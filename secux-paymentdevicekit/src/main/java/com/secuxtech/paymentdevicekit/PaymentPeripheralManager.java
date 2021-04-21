@@ -19,20 +19,20 @@ import static com.secuxtech.paymentdevicekit.BLEManager.TAG;
 /**
  * Created by maochuns.sun@gmail.com on 2020/4/15
  */
-public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
+public class PaymentPeripheralManager extends PaymentPeripheralManagerV1 {
 
 
     private PaymentCommandHandler mCmdHdr = new PaymentCommandHandler();
 
 
-    private Context                 mContext;
-    private int                     mScanTimeout;
-    private int                     mConnTimeout;
-    private int                     mCheckRSSI;
+    private Context mContext;
+    private int mScanTimeout;
+    private int mConnTimeout;
+    private int mCheckRSSI;
 
-    private SecuXPaymentPeripheral  mPaymentPeripheral;
+    private SecuXPaymentPeripheral mPaymentPeripheral;
 
-    public PaymentPeripheralManager(Context context, int scanTimeout, int checkRSSI, final int connectionTimeout){
+    public PaymentPeripheralManager(Context context, int scanTimeout, int checkRSSI, final int connectionTimeout) {
         mContext = context;
         mScanTimeout = scanTimeout;
         mConnTimeout = connectionTimeout;
@@ -50,7 +50,11 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
         if (SecuXBLEManager.getInstance().mBLEScanStart) {
             paymentDevice = SecuXBLEManager.getInstance().findTheDevice(connectDeviceId, scanTimeout, checkRSSI, connectionTimeout);
         } else {
-            paymentDevice = SecuXBLEManager.getInstance().scanForTheDevice(connectDeviceId, scanTimeout, checkRSSI, connectionTimeout);
+            try {
+                paymentDevice = SecuXBLEManager.getInstance().scanForTheDevice(connectDeviceId, scanTimeout, checkRSSI, connectionTimeout);
+            } catch (NullPointerException e) {
+                return new Pair<>(new Pair<>(SecuX_Peripheral_Operation_BLE_Off, "BLE is off"), null);
+            }
         }
         //Pair<BluetoothDevice, SecuXPaymentPeripheral> devInfo = SecuXBLEManager.getInstance().scanForTheDevice(connectDeviceId, scanTimeout, checkRSSI, connectionTimeout);
 
@@ -60,7 +64,7 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
             return ret;
         }
 
-        if (!paymentDevice.mPaymentPeripheral.isValidCodeKey(paykey)){
+        if (!paymentDevice.mPaymentPeripheral.isValidCodeKey(paykey)) {
             Log.i(ContentValues.TAG, "Invalid key code!");
             ret = new Pair<>(new Pair<>(SecuX_Peripheral_Operation_fail, "Invalid payment QRCode! QRCode is timeout!"), null);
             return ret;
@@ -97,22 +101,22 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
         Log.i(ContentValues.TAG, String.valueOf(SystemClock.uptimeMillis()) + " find the device");
         Pair<Pair<Integer, String>, SecuXPaymentPeripheral> ret = new Pair<>(new Pair<>(SecuX_Peripheral_Operation_fail, "Unknown reason"), null);
 
-        if (SecuXBLEManager.getInstance().connectWithDevice(paymentDevice.device, scanTimeout)){
+        if (SecuXBLEManager.getInstance().connectWithDevice(paymentDevice.device, scanTimeout)) {
             Log.i(ContentValues.TAG, String.valueOf(SystemClock.uptimeMillis()) + " Connect with the device done!");
 
             //For old FW version
             byte[] recvData = null;
             if (paymentDevice.mPaymentPeripheral.isOldVersion) {
                 byte[] identifyCmdReply = SecuXBLEManager.getInstance().sendCmdRecvData(paymentDevice.getValidatePeripheralCommand());
-                if (identifyCmdReply!=null && identifyCmdReply.length > 1) {
+                if (identifyCmdReply != null && identifyCmdReply.length > 1) {
                     recvData = Arrays.copyOfRange(identifyCmdReply, 1, identifyCmdReply.length);
                 }
-            }else {
+            } else {
                 Pair<Integer, byte[]> identifyRet = mCmdHdr.sendIdentifyCmd(paymentDevice.getValidatePeripheralCommand());
                 recvData = identifyRet.second;
             }
 
-            if (recvData!=null && recvData.length>0) {
+            if (recvData != null && recvData.length > 0) {
 
                 SecuXPaymentPeripheral paymentPeripheral = paymentDevice.mPaymentPeripheral;
                 if (paymentPeripheral.isValidPeripheralIvKey(recvData)) {
@@ -127,7 +131,7 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
                     if (paymentPeripheral.isOldVersion) {
                         ivKey = SecuXPaymentUtility.dataToHexString(ivKeyData);
                         ivKey = ivKey.toUpperCase();
-                    }else{
+                    } else {
                         ivKey = new String(ivKeyData);
                     }
                     Log.i(ContentValues.TAG, "ivkey=" + ivKey + " " + ivKey);
@@ -135,15 +139,15 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
                     mPaymentPeripheral = paymentPeripheral;
                     //mPaymentPeripheral.isOldVersion = devInfo.second.isOldVersion;
                     ret = new Pair<>(new Pair<>(SecuX_Peripheral_Operation_OK, ivKey), paymentPeripheral);
-                }else {
+                } else {
                     Log.d(ContentValues.TAG, "invalid ivkey data");
                     ret = new Pair<>(new Pair<>(SecuX_Peripheral_Operation_fail, "Invalid ivKey"), null);
                 }
-            }else{
-                Log.i(ContentValues.TAG, String.valueOf(SystemClock.uptimeMillis())  + " receive data failed!");
+            } else {
+                Log.i(ContentValues.TAG, String.valueOf(SystemClock.uptimeMillis()) + " receive data failed!");
                 ret = new Pair<>(new Pair<>(SecuX_Peripheral_Operation_fail, "Receive data timeout"), null);
             }
-        }else{
+        } else {
             Log.i(ContentValues.TAG, SystemClock.uptimeMillis() + "connect with the device failed!");
             ret = new Pair<>(new Pair<>(SecuX_Peripheral_Operation_fail, "Connect with device timeout"), null);
         }
@@ -159,13 +163,13 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
         SecuXBLEManager.getInstance().setBLEManager((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE));
 
         SecuXBLEDevice paymentDevice;
-        if (SecuXBLEManager.getInstance().mBLEScanStart){
+        if (SecuXBLEManager.getInstance().mBLEScanStart) {
             paymentDevice = SecuXBLEManager.getInstance().findTheDevice(connectDeviceId, scanTimeout, checkRSSI, connectionTimeout);
-        }else{
+        } else {
             paymentDevice = SecuXBLEManager.getInstance().scanForTheDevice(connectDeviceId, scanTimeout, checkRSSI, connectionTimeout);
         }
 
-        if (paymentDevice==null){
+        if (paymentDevice == null) {
             Log.i(ContentValues.TAG, "find device failed!");
             return null;
         }
@@ -176,7 +180,7 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
         }
 
         Log.i(ContentValues.TAG, String.valueOf(SystemClock.uptimeMillis()) + " find the device");
-        if (SecuXBLEManager.getInstance().connectWithDevice(paymentDevice.device, scanTimeout)){
+        if (SecuXBLEManager.getInstance().connectWithDevice(paymentDevice.device, scanTimeout)) {
             Log.i(ContentValues.TAG, String.valueOf(SystemClock.uptimeMillis()) + " Connect with the device done!");
 
             String theInfo = mCmdHdr.sendGetDeviceInfoCmd();
@@ -186,7 +190,7 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
             requestDisconnect();
             return paymentDevice;
 
-        }else{
+        } else {
             Log.i(ContentValues.TAG, SystemClock.uptimeMillis() + "connect with the device failed!");
         }
 
@@ -194,21 +198,21 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
         return null;
     }
 
-    public void requestDisconnect(){
+    public void requestDisconnect() {
         int disconnRet = mCmdHdr.requestDisconnect();
         Log.i(TAG, "Request disconnect ret = " + disconnRet);
 
         SecuXBLEManager.getInstance().disconnectWithDevice();
     }
 
-    public Pair<Integer, String> doGetIVKey(String connectDeviceId){
+    public Pair<Integer, String> doGetIVKey(String connectDeviceId) {
         Pair<Pair<Integer, String>, SecuXPaymentPeripheral> identifyRet = identifyDevice(mContext, mScanTimeout, connectDeviceId, mCheckRSSI, mConnTimeout);
-        if (identifyRet.first.first != SecuX_Peripheral_Operation_OK){
+        if (identifyRet.first.first != SecuX_Peripheral_Operation_OK) {
             requestDisconnect();
             return identifyRet.first;
         }
 
-        if (identifyRet.first.first == SecuX_Peripheral_Operation_OK && !identifyRet.second.isActivated()){
+        if (identifyRet.first.first == SecuX_Peripheral_Operation_OK && !identifyRet.second.isActivated()) {
             requestDisconnect();
             return new Pair<>(SecuX_Peripheral_Operation_fail, "Inactivated device!");
         }
@@ -222,14 +226,14 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
     }
 
 
-    public Pair<Integer, String> doGetIVKey(String connectDeviceId, byte[] nonce){
+    public Pair<Integer, String> doGetIVKey(String connectDeviceId, byte[] nonce) {
         Pair<Pair<Integer, String>, SecuXPaymentPeripheral> identifyRet = identifyDevice(nonce, mContext, mScanTimeout, connectDeviceId, mCheckRSSI, mConnTimeout);
-        if (identifyRet.first.first != SecuX_Peripheral_Operation_OK){
+        if (identifyRet.first.first != SecuX_Peripheral_Operation_OK) {
             requestDisconnect();
             return identifyRet.first;
         }
 
-        if (identifyRet.first.first == SecuX_Peripheral_Operation_OK && !identifyRet.second.isActivated()){
+        if (identifyRet.first.first == SecuX_Peripheral_Operation_OK && !identifyRet.second.isActivated()) {
             requestDisconnect();
             return new Pair<>(SecuX_Peripheral_Operation_fail, "Inactivated device!");
         }
@@ -259,15 +263,15 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
     }
 
 
-    public Pair<Integer, String>  doPaymentVerification(byte[] encryptedTransactionData, final Map<String, String> machineControlParams) {
-        if (isOldFWVersion()){
+    public Pair<Integer, String> doPaymentVerification(byte[] encryptedTransactionData, final Map<String, String> machineControlParams) {
+        if (isOldFWVersion()) {
             return super.doPaymentVerification(encryptedTransactionData, machineControlParams);
         }
 
         return doPaymentVerification(encryptedTransactionData);
     }
 
-    public Pair<Integer, String>  doPaymentVerification(byte[] encryptedTransactionData){
+    public Pair<Integer, String> doPaymentVerification(byte[] encryptedTransactionData) {
         Log.i(ContentValues.TAG, "doPaymentVerification ");
 
         Pair<Integer, String> ret = new Pair<>(SecuX_Peripheral_Operation_fail, "Unknown reason");
@@ -287,11 +291,11 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
         return ret;
     }
 
-    public Boolean isOldFWVersion(){
+    public Boolean isOldFWVersion() {
         return mPaymentPeripheral.isOldVersion;
     }
 
-    public Pair<Integer, Pair<String, String>> getRefundRefillInfo(Context context, String connectDeviceId, byte[] nonce){
+    public Pair<Integer, Pair<String, String>> getRefundRefillInfo(Context context, String connectDeviceId, byte[] nonce) {
         Log.i(ContentValues.TAG, SystemClock.uptimeMillis() + " getRefundRefillInfo device=" + connectDeviceId + " scanTimeout=" + mScanTimeout + " connectionTimeout=" + mConnTimeout + " Rssi=" + mCheckRSSI);
         Pair<Integer, Pair<String, String>> ret = new Pair<>(SecuX_Peripheral_Operation_fail, new Pair<>("Unknown reason", ""));
         mContext = context;
@@ -301,12 +305,12 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
             ret = new Pair<>(SecuX_Peripheral_Operation_fail, new Pair<>(identifyRet.first.second, ""));
             requestDisconnect();
 
-        }else if (!identifyRet.second.isActivated()){
+        } else if (!identifyRet.second.isActivated()) {
 
             ret = new Pair<>(SecuX_Peripheral_Operation_fail, new Pair<>("Inactivated device", ""));
             requestDisconnect();
 
-        }else {
+        } else {
             Pair<Integer, String> nRet = mCmdHdr.requestRefundDataCmd();
             if (nRet.first == 0) {
                 ret = new Pair<>(SecuX_Peripheral_Operation_OK, new Pair<>(nRet.second, identifyRet.first.second));
@@ -325,7 +329,7 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
         return ret;
     }
 
-    public Pair<Integer, Pair<String, String>> getRefundRefillInfo(Context context, String connectDeviceId){
+    public Pair<Integer, Pair<String, String>> getRefundRefillInfo(Context context, String connectDeviceId) {
         Log.i(ContentValues.TAG, SystemClock.uptimeMillis() + " getRefundRefillInfo device=" + connectDeviceId + " scanTimeout=" + mScanTimeout + " connectionTimeout=" + mConnTimeout + " Rssi=" + mCheckRSSI);
         Pair<Integer, Pair<String, String>> ret = new Pair<>(SecuX_Peripheral_Operation_fail, new Pair<>("Unknown reason", ""));
         mContext = context;
@@ -335,12 +339,12 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
             ret = new Pair<>(SecuX_Peripheral_Operation_fail, new Pair<>(identifyRet.first.second, ""));
             requestDisconnect();
 
-        }else if (!identifyRet.second.isActivated()){
+        } else if (!identifyRet.second.isActivated()) {
 
             ret = new Pair<>(SecuX_Peripheral_Operation_fail, new Pair<>("Inactivated device", ""));
             requestDisconnect();
 
-        }else {
+        } else {
             Pair<Integer, String> nRet = mCmdHdr.requestRefundDataCmd();
             if (nRet.first == 0) {
                 ret = new Pair<>(SecuX_Peripheral_Operation_OK, new Pair<>(nRet.second, identifyRet.first.second));
@@ -364,10 +368,10 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
     // For testing purpose
     //-----------------------------------------------------------------------------------------------------
 
-    public byte[] sendTestDataToDevice(Context context, String connectDeviceId, String cmdHex){
+    public byte[] sendTestDataToDevice(Context context, String connectDeviceId, String cmdHex) {
         Log.i(ContentValues.TAG, SystemClock.uptimeMillis() + " sendTestDataToDevice device=" + connectDeviceId + " scanTimeout=" + mScanTimeout + " connectionTimeout=" + mConnTimeout + " Rssi=" + mCheckRSSI);
 
-        if (cmdHex.length() == 0){
+        if (cmdHex.length() == 0) {
             return null;
         }
 
@@ -378,7 +382,7 @@ public class PaymentPeripheralManager extends PaymentPeripheralManagerV1{
 
             requestDisconnect();
 
-        }else{
+        } else {
 
             byte[] reply = SecuXBLEManager.getInstance().sendCmdRecvData(SecuXPaymentUtility.hexStringToData(cmdHex));
             return reply;
