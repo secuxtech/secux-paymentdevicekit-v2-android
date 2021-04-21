@@ -9,12 +9,12 @@ android {
             keyPassword 'sx1qaz'
         }
     }
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
         applicationId "com.secuxtech.paymentdeviceexample"
-        minSdkVersion 23
-        targetSdkVersion 28
+        minSdkVersion 21
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -41,7 +41,7 @@ dependencies {
     implementation project(path: ':secux-paymentdevicekit')
 
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
-    implementation 'com.android.support:cardview-v7:28.1.0'
+    implementation 'com.android.support:cardview-v7:29.1.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     implementation 'com.google.android.material:material:1.0.0-rc01'
 
