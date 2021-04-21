@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         release {
-            storeFile file('/Users/maochun/SecuX/Android/keystore/paymentkit/Untitled')
+            storeFile file('/Users/maochun/SecuX/Android/keystore/paymentdevicekit/Untitled')
             storePassword 'sx1qaz'
             keyAlias 'key0'
             keyPassword 'sx1qaz'
