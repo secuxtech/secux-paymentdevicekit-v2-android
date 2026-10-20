@@ -39,8 +39,30 @@ public class BaseActivity extends AppCompatActivity {
 
     private JSONArray mDevInfoJsonArr = new JSONArray();
 
-    String mTerminalID = "gkn3p0ec"; //b4f2xvql"; //
-    String mPaymentKey = "asz2gorm5bxh5nc5ecjjsqqstgnlsxsj"; // "xsi2moow3t2afl5up12tdtppjwa1kcwx"; //
+    protected static String mTerminalID = "";
+    protected static String mPaymentKey = "";
+    /** Configure disposable credentials for the intended test device; never commit them. */
+    public static boolean configurePaymentDemo(String terminalId, String paymentKey) {
+        if (terminalId == null || paymentKey == null
+                || terminalId.getBytes(java.nio.charset.StandardCharsets.UTF_8).length != 8
+                || paymentKey.getBytes(java.nio.charset.StandardCharsets.UTF_8).length != 32) { return false; }
+        mTerminalID = terminalId;
+        mPaymentKey = paymentKey;
+        return true;
+    }
+
+    protected boolean requirePaymentDemoCredentials() {
+        if (mTerminalID.getBytes(java.nio.charset.StandardCharsets.UTF_8).length == 8
+                && mPaymentKey.getBytes(java.nio.charset.StandardCharsets.UTF_8).length == 32) { return true; }
+        runOnUiThread(new Runnable() {
+            @Override public void run() {
+                android.widget.Toast.makeText(getApplicationContext(),
+                        "Configure fresh test device credentials first", android.widget.Toast.LENGTH_LONG).show();
+            }
+        });
+        return false;
+    }
+
 
     public void showProgress(String info){
         CommonProgressDialog.showProgressDialog(mContext, info);
@@ -141,20 +163,24 @@ public class BaseActivity extends AppCompatActivity {
 
     //For testing payment data
     public byte[] getEncryptMobilePaymentCommand(String terminalId, String amount, String ivKey, String cryptKey) {
+        if (cryptKey == null || cryptKey.getBytes(java.nio.charset.StandardCharsets.UTF_8).length != 32) {
+            throw new IllegalArgumentException("Configure a 32-byte test payment key first");
+        }
         return getEncryptMobilePaymentCommand(terminalId, amount, "DCT:SPC", ivKey, cryptKey);
     }
 
     public byte[] getEncryptMobilePaymentCommand(String terminalId, String amount, String currency, String ivKey, String cryptKey){
+        if (cryptKey == null || cryptKey.getBytes(java.nio.charset.StandardCharsets.UTF_8).length != 32) {
+            throw new IllegalArgumentException("Configure a 32-byte test payment key first");
+        }
 
         String plainTransaction = getMobilePaymentCommand(terminalId, amount, currency);
-        Log.d(TAG,"getEncryptMobilePaymentCommand() " + plainTransaction);
 
         // AES 256 crypt
         byte[] encrytedTransactionData = null;
         try {
             byte[] ivKeyData = ivKey.getBytes();
             //byte[] ivKeyData = SecuXUtility.hexStringToData(ivKey);
-            Log.i(TAG, SecuXPaymentUtility.dataToHexString(ivKeyData));
             encrytedTransactionData = encrypt(ivKeyData, cryptKey.getBytes(), plainTransaction.getBytes());
         }catch (Exception ex) {
             encrytedTransactionData = null;
@@ -191,7 +217,6 @@ public class BaseActivity extends AppCompatActivity {
 
         String plainTransaction = transactionTime + "," + transactionID + "," + terminalId + "," + amountString+","+amountCurrency;
 
-        Log.d(TAG,"plainTransaction:"+plainTransaction);
         return plainTransaction;
     }
 

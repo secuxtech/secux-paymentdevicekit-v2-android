@@ -326,6 +326,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     }
 
     public boolean payToDevice(List<PaymentDevice> devList, String amount){
+        if (!requirePaymentDemoCredentials()) { return false; }
 
         boolean payToDevRet = true;
 
@@ -356,6 +357,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     }
 
     public boolean payToDevice(String devID, String amount, String currency) {
+        if (!requirePaymentDemoCredentials()) { return false; }
         Log.i(TAG, "payToDevice " + amount + " " + currency);
 
         PaymentPeripheralManager peripheralManager = new PaymentPeripheralManager(mContext, 20, -80, 30);
@@ -379,6 +381,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     }
 
     public boolean payToDevice(PaymentPeripheralManager peripheralManager, String devID, String amount, String currency, String ivKey ){
+        if (!requirePaymentDemoCredentials()) { return false; }
         boolean payToDevRet = false;
         if (peripheralManager.isOldFWVersion()){
             try {
@@ -402,7 +405,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
 
                 //String encryptedStr = "91sGnngVALh6Ep3RsEJKhGQEQM2ntJiZxR0cwiQNLT\\/SbZcCVux1WHabIrzqkICsPz3PudpRHnEFwcbiMO7qhA==";
                 //final byte[] encryptedData = Base64.decode(encryptedStr, Base64.DEFAULT);
-                final byte[] encryptedData = getEncryptMobilePaymentCommand(devID.substring(devID.length() - 8, devID.length()), amount, currency,ivKey, "PA123456789012345678901234567891");
+                final byte[] encryptedData = getEncryptMobilePaymentCommand(devID.substring(devID.length() - 8, devID.length()), amount, currency,ivKey, mPaymentKey);
 
 
                 Pair<Integer, String> ret = peripheralManager.doPaymentVerification(encryptedData, machineIoControlParam);
@@ -418,8 +421,8 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
             }
         }else {
             try {
-                mTerminalID = "3zhkyue5";
-                mPaymentKey = "2l03aa4vrguhzt41uxmcy4yl14qqyey0";
+
+
                 amount = "1";
                 currency = "DCT:SPC";
                 final byte[] encryptedData = getEncryptMobilePaymentCommand(mTerminalID, amount, currency, ivKey, mPaymentKey);
@@ -451,6 +454,7 @@ public class MainActivity extends BaseActivity implements PopupMenu.OnMenuItemCl
     }
 
     public void startPaymentTest() {
+        if (!requirePaymentDemoCredentials()) { return; }
         //SecuXBLEManager.getInstance().stopScan();
 
         if (mAdapter == null){
