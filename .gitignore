@@ -1,2 +1,9 @@
 
 app/.DS_Store
+
+# Keep generated binaries and local signing credentials out of Git.
+**/build/
+.gradle/
+*.apk
+*.pepk
+key*.properties
